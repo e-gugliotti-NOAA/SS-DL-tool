@@ -38,7 +38,7 @@
 		"8787": {
 			"label": "Rstudio",
 			"requireLocalPort": true,
-			"onAutoForward": "openBrowser"
+			"onAutoForward": "ignore"
 		}
 	  },
 	  // "updateContentCommand": "python3 -m pip install -r requirements.txt",		  
