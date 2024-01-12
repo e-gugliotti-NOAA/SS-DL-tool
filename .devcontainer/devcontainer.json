@@ -25,6 +25,7 @@
 		  "extensions":[
 			"GitHub.codespaces",
 			"hbenl.vscode-test-explorer",
+			"peakchen90.open-html-in-browser",
 			"reditorsupport.r",
 			"rdebugger.r-debugger",
 			"ms-vsliveshare.vsliveshare",
@@ -37,7 +38,7 @@
 		"8787": {
 			"label": "Rstudio",
 			"requireLocalPort": true,
-			"onAutoForward": "ignore"
+			"onAutoForward": "openBrowser"
 		}
 	  },
 	  // "updateContentCommand": "python3 -m pip install -r requirements.txt",		  
