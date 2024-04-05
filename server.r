@@ -30,6 +30,8 @@ require(stringr)
 require(ggnewscale)
 require(future)
 require(parallel)
+require(future)
+require(parallel)
 #require(geomtextpath)
 
 #require(paletteer)
@@ -4987,12 +4989,22 @@ SS_writeforecast(forecast.file,paste0("Scenarios/",input$Scenario_name),overwrit
     if(input$OS_choice=="Mac"){os_exe <- "ss3_osx"} 
     if(input$OS_choice=="Linux"){os_exe <- "ss3_linux"}
       
+    if(input$OS_choice=="Windows"){os_exe <- "ss3"} 
+    if(input$OS_choice=="Mac"){os_exe <- "ss3_osx"} 
+    if(input$OS_choice=="Linux"){os_exe <- "ss3_linux"}
+      
     if(input$jitter_choice)
     {
       if(input$Njitter>0)
       {
          show_modal_spinner(spin="flower",color=wes_palettes$Moonrise1[1],text="Run jitters")
          #file.copy(paste0("Scenarios/",input$Scenario_name,"/ss.exe"),paste0("Scenarios/",input$Scenario_name,"/ss_copy.exe"),overwrite = FALSE)
+         if(input$jitter_parallel)
+         {
+          ncores <- parallel::detectCores() - 1
+          future::plan(future::multisession, workers = ncores)
+         }
+         jits<-r4ss::jitter(
          if(input$jitter_parallel)
          {
           ncores <- parallel::detectCores() - 1
@@ -5006,9 +5018,12 @@ SS_writeforecast(forecast.file,paste0("Scenarios/",input$Scenario_name),overwrit
                       init_values_src=0,
                       verbose=FALSE,
                       exe = exe,
+                      exe = exe,
                       extras = "-nohess"
                       )
          
+         profilemodels <- r4ss::SSgetoutput(dirvec=paste0(getwd(),"/Scenarios/",input$Scenario_name), keyvec=0:input$Njitter, getcovar=FALSE)
+         profilesummary <- r4ss::SSsummarize(profilemodels)
          profilemodels <- r4ss::SSgetoutput(dirvec=paste0(getwd(),"/Scenarios/",input$Scenario_name), keyvec=0:input$Njitter, getcovar=FALSE)
          profilesummary <- r4ss::SSsummarize(profilemodels)
          minlikes<-profilesummary$likelihoods[1,-length(profilesummary$likelihoods)]==min(profilesummary$likelihoods[1,-length(profilesummary$likelihoods)],na.rm=TRUE)
@@ -5020,9 +5035,12 @@ SS_writeforecast(forecast.file,paste0("Scenarios/",input$Scenario_name),overwrit
          #Make plot and save to folder
            main.dir<-getwd()
            if(!file.exists(paste0(main.dir,"/Scenarios/",input$Scenario_name,"/Jitter Results")))
+           if(!file.exists(paste0(main.dir,"/Scenarios/",input$Scenario_name,"/Jitter Results")))
           {
               dir.create(paste0(main.dir,"/Scenarios/",input$Scenario_name,"/Jitter Results"))
+              dir.create(paste0(main.dir,"/Scenarios/",input$Scenario_name,"/Jitter Results"))
           }
+           setwd(paste0(main.dir,"/Scenarios/",input$Scenario_name,"/Jitter Results"))
            setwd(paste0(main.dir,"/Scenarios/",input$Scenario_name,"/Jitter Results"))
            png("jitterplot.png")
          jitterplot<-plot(c(1:length(jitter.likes)),jitter.likes,type="p",col="black",bg="blue",pch=21,xlab="Jitter run",ylab="-log likelihood value",cex=1.25)
@@ -5067,6 +5085,7 @@ SS_writeforecast(forecast.file,paste0("Scenarios/",input$Scenario_name),overwrit
 
          #R-run to get new best fit model
          show_modal_spinner(spin="flower",color=wes_palettes$Moonrise1[2],text="Re-run best model post-jitters")
+         file.copy(paste0(main.dir,"/Scenarios/",input$Scenario_name,"/ss3.par_",(index.minlikes[1]-1),".sso"),paste0(main.dir,"/Scenarios/",input$Scenario_name,"/ss3.par"),overwrite = TRUE)
          file.copy(paste0(main.dir,"/Scenarios/",input$Scenario_name,"/ss3.par_",(index.minlikes[1]-1),".sso"),paste0(main.dir,"/Scenarios/",input$Scenario_name,"/ss3.par"),overwrite = TRUE)
          #file.rename(paste0("Scenarios/",input$Scenario_name,"/ss_copy.exe"),paste0("Scenarios/",input$Scenario_name,"/ss.exe"),overwrite = FALSE)
              starter.file$init_values_src<-1
@@ -5365,6 +5384,7 @@ if(input$Opt_mod==TRUE)
 {
   show_modal_spinner(spin="flower",color=wes_palettes$Rushmore[1],text=paste0("Run initial optimization?"))
   RUN.SS(file.path(modeff.dir,modeff.name),ss.cmd="-nox -mcmc 100 -hbf",OS.in=input$OS_choice)
+  RUN.SS(file.path(modeff.dir,modeff.name),ss.cmd="-nox -mcmc 100 -hbf",OS.in=input$OS_choice)
 
   remove_modal_spinner()
 }
@@ -5493,6 +5513,7 @@ observeEvent(input$run_Profiles,{
                         run = "profile",
                         profile_details = get,
                         exe=os_exe,
+                        exe=os_exe,
                         prior_check = FALSE))
 
 
@@ -5595,6 +5616,7 @@ observeEvent(input$run_MultiProfiles,{
           extras = "-nohess",
           prior_check=FALSE,
           exe = os_exe,
+          exe = os_exe,
           show_in_console = TRUE
         )        
       }
@@ -5609,6 +5631,7 @@ observeEvent(input$run_MultiProfiles,{
           string = prof_parms_names,
           profilevec = par.df,
           prior_check=TRUE,
+          exe = os_exe,
           exe = os_exe,
           show_in_console = TRUE
         )
