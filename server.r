@@ -106,14 +106,12 @@ if(OS.in=="Windows")
     #command <- paste0(navigate," & ", "ss", ss.cmd) 
     #shell(command, invisible=TRUE, translate=TRUE)
     r4ss::run(path,exe="ss3",extras=ss.cmd,skipfinished=FALSE,show_in_console = TRUE)
-    exe <- "ss3"
   } 
 if(OS.in=="Mac")  
   {
     
     command <- c(paste("cd", path), "chmod +x ./ss3_osx",paste("./ss3_osx", ss.cmd)) 
     system(paste(command, collapse=";"),invisible=TRUE)
-    exe <- "ss3_osx"
     
     #command <- paste0(path,"/./ss_mac", ss.cmd) 
     #system(command, invisible=TRUE)
@@ -122,7 +120,6 @@ if(OS.in=="Linux")
   {
     command <- c(paste("cd", path), "chmod +x ./ss3_linux",paste("./ss3_linux", ss.cmd)) 
     system(paste(command, collapse=";"), invisible=TRUE)
-    exe = "ss3_linux"
   }   
 }  
 
@@ -5001,13 +4998,7 @@ SS_writeforecast(forecast.file,paste0("Scenarios/",input$Scenario_name),overwrit
          #file.copy(paste0("Scenarios/",input$Scenario_name,"/ss.exe"),paste0("Scenarios/",input$Scenario_name,"/ss_copy.exe"),overwrite = FALSE)
          if(input$jitter_parallel)
          {
-          ncores <- parallel::detectCores() - 1
-          future::plan(future::multisession, workers = ncores)
-         }
-         jits<-r4ss::jitter(
-         if(input$jitter_parallel)
-         {
-          ncores <- parallel::detectCores() - 1
+          ncores <- parallelly::availableCores(omit = 1)
           future::plan(future::multisession, workers = ncores)
          }
          jits<-r4ss::jitter(
@@ -5017,13 +5008,10 @@ SS_writeforecast(forecast.file,paste0("Scenarios/",input$Scenario_name),overwrit
                       jitter_fraction=input$jitter_fraction,
                       init_values_src=0,
                       verbose=FALSE,
-                      exe = exe,
-                      exe = exe,
+                      exe = os_exe,
                       extras = "-nohess"
                       )
          
-         profilemodels <- r4ss::SSgetoutput(dirvec=paste0(getwd(),"/Scenarios/",input$Scenario_name), keyvec=0:input$Njitter, getcovar=FALSE)
-         profilesummary <- r4ss::SSsummarize(profilemodels)
          profilemodels <- r4ss::SSgetoutput(dirvec=paste0(getwd(),"/Scenarios/",input$Scenario_name), keyvec=0:input$Njitter, getcovar=FALSE)
          profilesummary <- r4ss::SSsummarize(profilemodels)
          minlikes<-profilesummary$likelihoods[1,-length(profilesummary$likelihoods)]==min(profilesummary$likelihoods[1,-length(profilesummary$likelihoods)],na.rm=TRUE)
@@ -5035,12 +5023,9 @@ SS_writeforecast(forecast.file,paste0("Scenarios/",input$Scenario_name),overwrit
          #Make plot and save to folder
            main.dir<-getwd()
            if(!file.exists(paste0(main.dir,"/Scenarios/",input$Scenario_name,"/Jitter Results")))
-           if(!file.exists(paste0(main.dir,"/Scenarios/",input$Scenario_name,"/Jitter Results")))
           {
               dir.create(paste0(main.dir,"/Scenarios/",input$Scenario_name,"/Jitter Results"))
-              dir.create(paste0(main.dir,"/Scenarios/",input$Scenario_name,"/Jitter Results"))
           }
-           setwd(paste0(main.dir,"/Scenarios/",input$Scenario_name,"/Jitter Results"))
            setwd(paste0(main.dir,"/Scenarios/",input$Scenario_name,"/Jitter Results"))
            png("jitterplot.png")
          jitterplot<-plot(c(1:length(jitter.likes)),jitter.likes,type="p",col="black",bg="blue",pch=21,xlab="Jitter run",ylab="-log likelihood value",cex=1.25)
@@ -5513,7 +5498,6 @@ observeEvent(input$run_Profiles,{
                         run = "profile",
                         profile_details = get,
                         exe=os_exe,
-                        exe=os_exe,
                         prior_check = FALSE))
 
 
@@ -5616,7 +5600,6 @@ observeEvent(input$run_MultiProfiles,{
           extras = "-nohess",
           prior_check=FALSE,
           exe = os_exe,
-          exe = os_exe,
           show_in_console = TRUE
         )        
       }
@@ -5631,7 +5614,6 @@ observeEvent(input$run_MultiProfiles,{
           string = prof_parms_names,
           profilevec = par.df,
           prior_check=TRUE,
-          exe = os_exe,
           exe = os_exe,
           show_in_console = TRUE
         )
