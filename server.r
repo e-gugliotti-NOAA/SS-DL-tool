@@ -4812,6 +4812,8 @@ SS_writeforecast(forecast.file,paste0("Scenarios/",input$Scenario_name),overwrit
     if(input$Data_wt=="Francis"){DataWT_opt<-"Francis"}
     if(input$Data_wt=="McAllister-Ianelli"){DataWT_opt<-"MI"}
  				    
+
+
 #RUN SS MODELS
     if(is.null(input$user_model))
     {
@@ -4994,6 +4996,7 @@ SS_writeforecast(forecast.file,paste0("Scenarios/",input$Scenario_name),overwrit
     if(input$OS_choice=="Mac" && R.version[["arch"]]=="x86_64"){os_exe <- "ss3_osx"}
     if(input$OS_choice=="Mac" && R.version[["arch"]]=="aarch64"){os_exe <- "ss3_osx_m2"}
     if(input$OS_choice=="Linux"){os_exe <- "ss3_linux"}
+
       
     if(input$jitter_choice)
     {
