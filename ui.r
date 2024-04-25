@@ -3,84 +3,86 @@ require(shinyjs)
 require(shinyWidgets)
 require(shinyFiles)
 require(shinyBS)
+require(bslib)
 
 linebreaks <- function(n){HTML(strrep(br(), n))}
 
 ui<-function(request){
 
-shinyUI(fluidPage(theme = "bootstrap.css",
-  useShinyjs(),
-  titlePanel("Welcome to the Stock Assessment Continuum Tool, powered by Stock Synthesis (version 3.30.22.1)"),
-      h4(p(strong("(Formerly known as the Stock Synthesis Data-Limited (SS-DL) tool), this tool uses the",tags$a(href="https://github.com/nmfs-stock-synthesis/stock-synthesis", "Stock Synthesis", target="_blank"),"framework to implement a ",tags$a(href="javascript:window.open('SS-DL-approaches.html', '_blank','width=600,height=400')", "variety of types"), "of models."))),
-      h5(p("Any suggested changes or requests? Please submit an issue with the recommendation" ,tags$a(href="https://github.com/shcaba/SS-DL-tool/issues", "here", target="_blank"))),
-      h5(p("Access the latest version of the Stock Synthesis manual " ,tags$a(href="https://nmfs-ost.github.io/ss3-doc/", "here", target="_blank"))),
-      h5(p("Watch a talk on how to use the SAC tool and the concept of the stock assessment continuum " ,tags$a(href="https://www.youtube.com/watch?v=NFJPoFJ9qyo", "here", target="_blank"))),
-      br(),
+shinyUI(page_fluid(
+  theme = "bootstrap.css",
+  headerPanel(title = "Welcome to the Stock Assessment Continuum Tool, powered by Stock Synthesis (version 3.30.22.1)"),
+  
+  h4(p(strong("(Formerly known as the Stock Synthesis Data-Limited (SS-DL) tool), this tool uses the",tags$a(href="https://github.com/nmfs-stock-synthesis/stock-synthesis", "Stock Synthesis", target="_blank"),"framework to implement a ",tags$a(href="javascript:window.open('SS-DL-approaches.html', '_blank','width=600,height=400')", "variety of types"), "of models."))),
+  h5(p("Any suggested changes or requests? Please submit an issue with the recommendation" ,tags$a(href="https://github.com/shcaba/SS-DL-tool/issues", "here", target="_blank"))),
+  h5(p("Access the latest version of the Stock Synthesis manual " ,tags$a(href="https://nmfs-ost.github.io/ss3-doc/", "here", target="_blank"))),
+  h5(p("Watch a talk on how to use the SAC tool and the concept of the stock assessment continuum " ,tags$a(href="https://www.youtube.com/watch?v=NFJPoFJ9qyo", "here", target="_blank"))),
+  br(),
 
-sidebarLayout(
-   sidebarPanel(
-    style = "position:fixed;width:30%;height: 90vh; overflow-y: scroll;",
-shinyjs::hidden(wellPanel(id="Data_panel",
-  h4(strong("Choose data file")),
- fluidRow(column(width=12,fileInput('file2', 'Catch time series',
-                           accept = c(
-                             'text/csv',
-                             'text/comma-separated-values',
-                             'text/tab-separated-values',
-                             'text/plain',
-                             '.csv'
-                           )
-  ))),
- 
-  fluidRow(column(width=12,fileInput('file1', 'Length composition',
-                                    accept = c(
-                                      'text/csv',
-                                      'text/comma-separated-values',
-                                      'text/tab-separated-values',
-                                      'text/plain',
-                                      '.csv'
-                                    )
-  ))),
- 
-  fluidRow(column(width=12,fileInput('file3', 'Age composition',
-            accept = c(
-              'text/csv',
-              'text/comma-separated-values',
-              'text/tab-separated-values',
-              'text/plain',
-              '.csv'
-            )
+  layout_sidebar(
+    sidebar = sidebar(
+      width = "30%", 
+      shinyjs::hidden(wellPanel(id="Data_panel",
+        h4(strong("Choose data file")),
+        fluidRow(column(width=12,fileInput('file2', 'Catch time series',
+                               accept = c(
+                                 'text/csv',
+                                 'text/comma-separated-values',
+                                 'text/tab-separated-values',
+                                 'text/plain',
+                                 '.csv'
+                               )
           ))),
+     
+        fluidRow(column(width=12,fileInput('file1', 'Length composition',
+                                        accept = c(
+                                          'text/csv',
+                                          'text/comma-separated-values',
+                                          'text/tab-separated-values',
+                                          'text/plain',
+                                          '.csv'
+                                        )
+          ))),
+     
+        fluidRow(column(width=12,fileInput('file3', 'Age composition',
+                accept = c(
+                  'text/csv',
+                  'text/comma-separated-values',
+                  'text/tab-separated-values',
+                  'text/plain',
+                  '.csv'
+                )
+         ))),
+    
+     
+        #Mute for now, pull back in when index methods are ready
+        fileInput('file4', 'Abundance index',
+                  accept = c(
+                    'text/csv',
+                    'text/comma-separated-values',
+                    'text/tab-separated-values',
+                    'text/plain',
+                    '.csv'
+                  )
+                ),
+     
+        h4(strong("Clear data files")),
+        fluidRow(column(width=3,actionButton("reset_ct", "Catches")),
+                 column(width=3,actionButton("reset_lt", "Length")),
+                 column(width=3,actionButton("reset_age", "Ages")),
+                 column(width=3,actionButton("reset_index", "Index"))), 
+        )
+      ),
 
- 
-  #Mute for now, pull back in when index methods are ready
-  fileInput('file4', 'Abundance index',
-            accept = c(
-              'text/csv',
-              'text/comma-separated-values',
-              'text/tab-separated-values',
-              'text/plain',
-              '.csv'
-            )
-          ),
- 
-  h4(strong("Clear data files")),
-     fluidRow(column(width=3,actionButton("reset_ct", "Catches")),
-              column(width=3,actionButton("reset_lt", "Length")),
-              column(width=3,actionButton("reset_age", "Ages")),
-              column(width=3,actionButton("reset_index", "Index"))), 
-)
-),
-
-shinyjs::hidden(wellPanel(id="Existing_files",
- fluidRow(column(width=10,checkboxInput("user_model","Use existing model files?",FALSE))),
-  h5(em("Do not use this option with catch only models.")),
-  h5(em("Make sure the model run is in the Scenarios folder. Put that folder name in the Scenario name input and run the model.")),
-  h5(em("Using an existing model allows you to do run complex and custom model runs outside the options of the SS-DL tool, but still use some of the quick features.")),
-  h5(em("Examples are applying jitters or any of the additional SS3 options that do not modify the data or control files.")),
-  h5(em("To do sensitivity runs for pre-existing models, make a copy of the folder and re-name it, then make desired changes in the data and/or control files.")),
-     )
-   ),
+    shinyjs::hidden(wellPanel(id="Existing_files",
+      fluidRow(column(width=10,checkboxInput("user_model","Use existing model files?",FALSE))),
+      h5(em("Do not use this option with catch only models.")),
+      h5(em("Make sure the model run is in the Scenarios folder. Put that folder name in the Scenario name input and run the model.")),
+      h5(em("Using an existing model allows you to do run complex and custom model runs outside the options of the SS-DL tool, but still use some of the quick features.")),
+      h5(em("Examples are applying jitters or any of the additional SS3 options that do not modify the data or control files.")),
+      h5(em("To do sensitivity runs for pre-existing models, make a copy of the folder and re-name it, then make desired changes in the data and/or control files.")),
+         )
+       ),
 
     shinyjs::hidden(wellPanel(id="panel_Ct_F_LO",
         h4(strong("Use constant catch or estimate fishing mortality directly?")),
@@ -150,7 +152,7 @@ shinyjs::hidden(wellPanel(id="Existing_files",
     ),
 
     shinyjs::hidden(wellPanel(id="panel_SSLO_LH",
-    h4(strong("Life history inputs")),
+        h4(strong("Life history inputs")),
         wellPanel(id="panel_SSLO_fixed",
         h4(strong(em("Female"))),
         fluidRow(column(width=6,numericInput("M_f", "Natural mortality", value=NA,min=0, max=10000, step=0.00001))),    
@@ -170,8 +172,8 @@ shinyjs::hidden(wellPanel(id="Existing_files",
         h4(strong(em("Male"))),
         h5("Enter male specific values. Otherwise, males are assumed equal to females"),
         h5("If estimating any female life history parameters and you want males to equal the females estimated values, use the offset option and pre-specify the male parameter(s) to 0 to ensure males = females. If you don't do this, the males values will stay at the female starting values."),        
-         fluidRow(column(width=6,div(checkboxInput("male_parms","Males specific values?",FALSE),style = "font-size: 16px !important;")),
-                  column(width=6,checkboxInput("male_offset","Males offset from females (log(m/f))?",FALSE))),
+        fluidRow(column(width=6,div(checkboxInput("male_parms","Males specific values?",FALSE),style = "font-size: 16px !important;")),
+                column(width=6,checkboxInput("male_offset","Males offset from females (log(m/f))?",FALSE))),
          #tags$style("#male_parms {font-size: 16px !important;}"),
          # fluidRow(column(width=10,prettyCheckbox("male_parms","Males specific values?",
          #  value=FALSE, 
@@ -192,31 +194,30 @@ shinyjs::hidden(wellPanel(id="Existing_files",
     )
     ),
 
-shinyjs::hidden(wellPanel(id="panel_SS_LH_fixed_est_tog",
-        
+    shinyjs::hidden(wellPanel(id="panel_SS_LH_fixed_est_tog",
         fluidRow(column(width=10,switchInput("est_parms","Estimate parameters?",
-        value=FALSE,
-        onLabel = "YES",
-        offLabel = "NO",
-        onStatus = "success",
-        offStatus = "danger"))), 
+                 value=FALSE,
+                 onLabel = "YES",
+                 offLabel = "NO",
+                 onStatus = "success",
+                 offStatus = "danger"))), 
 
-       h5("Parameters can either be pre-specified (i.e., set to specific value) or estimated."),
-       h5("Estimating parameters is a data-based approach to determining life history values"),
-       h5("Estimating parameters can also propagate parameter uncertainty into derived model outputs"),
-       br(),
-       h5("When estimating parameters with catch and length (SS-CL) models consider:"),
-       tags$ul(tags$li(h5(p("It is recommended to run the model first by pre-specifying parameters.")))),
-       tags$ul(tags$li(h5(p("Then run likelihood profiles to see if the data contain any information on parameters.")))),
-       tags$ul(tags$li(h5(p("Parameters that seem informed by the data (i.e., result in realistic values) are good candidates for estimation.")))),
-       tags$ul(tags$li(h5(p("The most likely parameters to have information from fishery-based lengths are Linf and M.")))),
-       h5("Not all parameters need be estimated. Fix parameters by turning the phase negative (e.g., -1)."),
-       h5("The concept of phasing allows the user to say when to start parameter estimate, thus spreading out parameter estimation instead of doing all estimation at once. For example, parameters in phase 1 will begin estimation immediately. Parameters in phase 2 will stay at their input value until phase 1 estimation is complete. All parameters in any earlier phases continue to be re-estimated in subsequent phases. Have questions on what phase to put parameters? Click", tags$a(href="javascript:window.open('Phasing_AEP.pdf', '_blank','width=600,height=400')", "here"), "for some suggestions."),
-       h5(p("Natural mortality is an often difficult value to obtain. Consider using",tags$a(href="https://connect.fisheries.noaa.gov/natural-mortality-tool/", "The Natural Mortality Tool", target="_blank"), " to either obtain natural mortality values or developing a prior for use in estimating natural mortality. The Github repository for it can be found",tags$a(href="https://github.com/shcaba/Natural-Mortality-Tool", "here", target="_blank"),".")),
-       br(),
-       h5("Load life history values instead of inputting them?"),
-       uiOutput("LH_load_file"),       
-)),
+        h5("Parameters can either be pre-specified (i.e., set to specific value) or estimated."),
+        h5("Estimating parameters is a data-based approach to determining life history values"),
+        h5("Estimating parameters can also propagate parameter uncertainty into derived model outputs"),
+        br(),
+        h5("When estimating parameters with catch and length (SS-CL) models consider:"),
+        tags$ul(tags$li(h5(p("It is recommended to run the model first by pre-specifying parameters.")))),
+        tags$ul(tags$li(h5(p("Then run likelihood profiles to see if the data contain any information on parameters.")))),
+        tags$ul(tags$li(h5(p("Parameters that seem informed by the data (i.e., result in realistic values) are good candidates for estimation.")))),
+        tags$ul(tags$li(h5(p("The most likely parameters to have information from fishery-based lengths are Linf and M.")))),
+        h5("Not all parameters need be estimated. Fix parameters by turning the phase negative (e.g., -1)."),
+        h5("The concept of phasing allows the user to say when to start parameter estimate, thus spreading out parameter estimation instead of doing all estimation at once. For example, parameters in phase 1 will begin estimation immediately. Parameters in phase 2 will stay at their input value until phase 1 estimation is complete. All parameters in any earlier phases continue to be re-estimated in subsequent phases. Have questions on what phase to put parameters? Click", tags$a(href="javascript:window.open('Phasing_AEP.pdf', '_blank','width=600,height=400')", "here"), "for some suggestions."),
+        h5(p("Natural mortality is an often difficult value to obtain. Consider using",tags$a(href="https://connect.fisheries.noaa.gov/natural-mortality-tool/", "The Natural Mortality Tool", target="_blank"), " to either obtain natural mortality values or developing a prior for use in estimating natural mortality. The Github repository for it can be found",tags$a(href="https://github.com/shcaba/Natural-Mortality-Tool", "here", target="_blank"),".")),
+        br(),
+        h5("Load life history values instead of inputting them?"),
+        uiOutput("LH_load_file"),       
+      )),
 
   shinyjs::hidden(wellPanel(id="panel_SS_LH_fixed",
     h4(strong("Life history inputs")),
@@ -1110,7 +1111,8 @@ h5(strong("This cannot be done while the SS-DL tool is open, so either use anoth
 ###########################################
 ###########################################
 
-      mainPanel(        
+      mainPanel(
+       width = "65%",
        tabsetPanel(id="tabs",
 #         navbarPage(id="tabs",
             
