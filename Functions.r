@@ -946,6 +946,11 @@ profile_multi<-function (dir, oldctlfile = "control.ss_new", masterctlfile = lif
   prior_check = TRUE, read_like = TRUE, exe = "ss3", verbose = TRUE, 
   ...) 
 {
+  if(.Platform[["OS.type"]] == "windows"){exe <- "ss3"} 
+  if(substr(R.version[["os"]], 1, 6) == "darwin" && R.version[["arch"]]=="x86_64"){exe <- "ss3_osx"} 
+  if(substr(R.version[["os"]], 1, 6) == "darwin" && R.version[["arch"]]=="aarch64"){exe <- "ss3_osx_arm64"} 
+  if(R.version[["os"]] == "linux-gnu"){exe <- "ss3_linux"}
+
   orig_wd <- getwd()
   on.exit(setwd(orig_wd))
   if (lifecycle::is_present(masterctlfile)) {
