@@ -29,7 +29,8 @@ shinyjs::hidden(wellPanel(id="Bookmark_panel",
           fluidRow(
             column(12, h4("Upload a saved input rds file:")),
             column(12, fileInput("loadInputs", NULL)),
-            column(12, h6("File namess should only inlcude letters and numbers, otherwise an upload error may occur. If you see 'Error: Invalid state id', rename the file and try again."))
+            column(12, strong(uiOutput("input_file_text"))),
+            column(12, h6("File names should only include letters and numbers, otherwise an upload error may occur. If you see 'Error: Invalid state id', rename the file and try again."))
           ))),
 
 shinyjs::hidden(wellPanel(id="Data_panel",
@@ -830,7 +831,7 @@ shinyjs::hidden(wellPanel(id="panel_SS_LH_fixed_est_tog",
     h5(p(em("Using different scenario names when changing data or parameter values allows easy sensitivity exploration."))),
     h5(p(strong("For Mac and Linux users, do not leave spaces in the Scenario name."))),
     
-    br(),
+    # h5(br()),
 
     fluidRow(column(width=10,checkboxInput("scenario_description", h5(strong("Add a scenario description?")),FALSE))),
     uiOutput("scenario_description_text")
