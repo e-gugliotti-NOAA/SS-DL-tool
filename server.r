@@ -33,6 +33,7 @@ require(parallel)
 require(parallelly)
 require(fs)
 require(tools)
+require(emo)
 #require(SSMSE)
 #require(geomtextpath)
 
@@ -4878,13 +4879,13 @@ SS_writeforecast(forecast.file,paste0("Scenarios/",input$Scenario_name),overwrit
     if(is.null(input$no_hess)){
       cmd.in<-""
       if(!is.null(input$add_comms)){if(input$add_comms==TRUE){cmd.in=paste0(" -nohess ",input$add_comms_in)}}
-      RUN.SS(paste0("Scenarios/",input$Scenario_name),ss.cmd=cmd.in)
+      run_results <- try(RUN.SS(paste0("Scenarios/",input$Scenario_name),ss.cmd=cmd.in))
 
       if(!file.exists(paste0("Scenarios/",input$Scenario_name,"data_echo.ss_new")))
         {
       cmd.in<-" -nohess"
       if(!is.null(input$add_comms)){if(input$add_comms==TRUE){cmd.in=paste0(" -nohess ",input$add_comms_in)}}
-      RUN.SS(paste0("Scenarios/",input$Scenario_name),ss.cmd=cmd.in)
+      run_results <- try(RUN.SS(paste0("Scenarios/",input$Scenario_name),ss.cmd=cmd.in))
         }
     }
 
@@ -4894,13 +4895,13 @@ SS_writeforecast(forecast.file,paste0("Scenarios/",input$Scenario_name),overwrit
       {
       cmd.in<-" -nohess"
       if(!is.null(input$add_comms)){if(input$add_comms==TRUE){cmd.in=paste0(" -nohess ",input$add_comms_in)}}
-      RUN.SS(paste0("Scenarios/",input$Scenario_name),ss.cmd=cmd.in)
+      run_results <- try(RUN.SS(paste0("Scenarios/",input$Scenario_name),ss.cmd=cmd.in))
       }
       if(!input$no_hess)
       {
       cmd.in<-""
       if(!is.null(input$add_comms)){if(input$add_comms==TRUE){cmd.in=paste0(" -nohess ",input$add_comms_in)}}
-      RUN.SS(paste0("Scenarios/",input$Scenario_name),ss.cmd=cmd.in)
+      run_results <- try(RUN.SS(paste0("Scenarios/",input$Scenario_name),ss.cmd=cmd.in))
       }
     }
     }
@@ -4914,13 +4915,13 @@ SS_writeforecast(forecast.file,paste0("Scenarios/",input$Scenario_name),overwrit
     if(is.null(input$no_hess)){
       cmd.in<-""
       if(!is.null(input$add_comms)){if(input$add_comms==TRUE){cmd.in=paste0(" -nohess ",input$add_comms_in)}}
-      RUN.SS(paste0("Scenarios/",input$Scenario_name),ss.cmd=cmd.in)
+      run_results <- try(RUN.SS(paste0("Scenarios/",input$Scenario_name),ss.cmd=cmd.in))
 
       if(!file.exists(paste0("Scenarios/",input$Scenario_name,"data_echo.ss_new")))
         {
       cmd.in<-" -nohess"
       if(!is.null(input$add_comms)){if(input$add_comms==TRUE){cmd.in=paste0(" -nohess ",input$add_comms_in)}}
-      RUN.SS(paste0("Scenarios/",input$Scenario_name),ss.cmd=cmd.in)
+      run_results <- try(RUN.SS(paste0("Scenarios/",input$Scenario_name),ss.cmd=cmd.in))
         }
     }
 
@@ -4930,13 +4931,13 @@ SS_writeforecast(forecast.file,paste0("Scenarios/",input$Scenario_name),overwrit
       {
       cmd.in<-" -nohess"
       if(!is.null(input$add_comms)){if(input$add_comms==TRUE){cmd.in=paste0(" -nohess ",input$add_comms_in)}}
-      RUN.SS(paste0("Scenarios/",input$Scenario_name),ss.cmd=cmd.in)
+      run_results <- try(RUN.SS(paste0("Scenarios/",input$Scenario_name),ss.cmd=cmd.in))
       }
       if(!input$no_hess)
       {
       cmd.in<-""
       if(!is.null(input$add_comms)){if(input$add_comms==TRUE){cmd.in=paste0(" -nohess ",input$add_comms_in)}}
-      RUN.SS(paste0("Scenarios/",input$Scenario_name),ss.cmd=cmd.in)
+      run_results <- try(RUN.SS(paste0("Scenarios/",input$Scenario_name),ss.cmd=cmd.in))
       }
     }
   }
@@ -4946,13 +4947,13 @@ SS_writeforecast(forecast.file,paste0("Scenarios/",input$Scenario_name),overwrit
     if(is.null(input$no_hess_user)){
       cmd.in<-""
       if(!is.null(input$add_comms_user)){if(input$add_comms_user==TRUE){cmd.in=paste0(" ",input$add_comms_in_user)}}
-      RUN.SS(paste0("Scenarios/",input$Scenario_name),ss.cmd=cmd.in)
+      run_results <- try(RUN.SS(paste0("Scenarios/",input$Scenario_name),ss.cmd=cmd.in))
 
       if(!file.exists(paste0("Scenarios/",input$Scenario_name,"data_echo.ss_new")))
         {
       cmd.in<-" -nohess"
       if(!is.null(input$add_comms_user)){if(input$add_comms_user==TRUE){cmd.in=paste0(" ",input$add_comms_in_user)}}
-      RUN.SS(paste0("Scenarios/",input$Scenario_name),ss.cmd=cmd.in)
+      run_results <- try(RUN.SS(paste0("Scenarios/",input$Scenario_name),ss.cmd=cmd.in))
         }
     }
 
@@ -4962,13 +4963,13 @@ SS_writeforecast(forecast.file,paste0("Scenarios/",input$Scenario_name),overwrit
       {
       cmd.in<-" -nohess"
       if(!is.null(input$add_comms_user)){if(input$add_comms_user==TRUE){cmd.in=paste0(" ",input$add_comms_in_user)}}
-      RUN.SS(paste0("Scenarios/",input$Scenario_name),ss.cmd=cmd.in)
+      run_results <- try(RUN.SS(paste0("Scenarios/",input$Scenario_name),ss.cmd=cmd.in))
       }
       if(!input$no_hess_user)
       {
       cmd.in<-""
       if(!is.null(input$add_comms_user)){if(input$add_comms_user==TRUE){cmd.in=paste0(" ",input$add_comms_in_user)}}
-      RUN.SS(paste0("Scenarios/",input$Scenario_name),ss.cmd=cmd.in)
+      run_results <- try(RUN.SS(paste0("Scenarios/",input$Scenario_name),ss.cmd=cmd.in))
       }
     }
   }
@@ -5021,13 +5022,13 @@ SS_writeforecast(forecast.file,paste0("Scenarios/",input$Scenario_name),overwrit
         {      
           show_modal_spinner(spin="flower",color=wes_palettes$Zissou1[4],text="Making plots")
           RPs_4_plots<-as.numeric(trimws(unlist(strsplit(input$plot_RPs_inputs,","))))
-          SS_plots(Model.output,maxyr=data.file$endyr+1,verbose=FALSE,btarg=RPs_4_plots[1],minbthresh=RPs_4_plots[2])
+          plot_function <- callr::r_bg(SS_plots(Model.output,maxyr=data.file$endyr+1,verbose=FALSE,btarg=RPs_4_plots[1],minbthresh=RPs_4_plots[2]), supervise = TRUE)
         }
 
       if(is.null(input$no_tables))
         {      
           show_modal_spinner(spin="flower",color=wes_palettes$Zissou1[5],text="Making tables")
-          try(SSexecutivesummary(Model.output))   
+          table_results <- try(SSexecutivesummary(Model.output))
         }
 
    if(!is.null(input$no_plots_tables)){      
@@ -5036,7 +5037,7 @@ SS_writeforecast(forecast.file,paste0("Scenarios/",input$Scenario_name),overwrit
         #Make SS plots  
         show_modal_spinner(spin="flower",color=wes_palettes$Zissou1[4],text="Making plots")
          RPs_4_plots<-as.numeric(trimws(unlist(strsplit(input$plot_RPs_inputs,","))))
-         SS_plots(Model.output,maxyr=data.file$endyr+1,verbose=FALSE,btarg=RPs_4_plots[1],minbthresh=RPs_4_plots[2])
+         plot_function <- callr::r_bg(SS_plots(Model.output,maxyr=data.file$endyr+1,verbose=FALSE,btarg=RPs_4_plots[1],minbthresh=RPs_4_plots[2]), supervise = TRUE)
       }
     }
 
@@ -5045,7 +5046,7 @@ SS_writeforecast(forecast.file,paste0("Scenarios/",input$Scenario_name),overwrit
       {      
         #Make SS3 tables
         show_modal_spinner(spin="flower",color=wes_palettes$Zissou1[5],text="Making tables")
-        try(SSexecutivesummary(Model.output))   
+        table_results <- try(SSexecutivesummary(Model.output))
       }
     }
     
@@ -5140,7 +5141,7 @@ SS_writeforecast(forecast.file,paste0("Scenarios/",input$Scenario_name),overwrit
              starter.file$init_values_src<-1
              starter.file$jitter_fraction<-0
          SS_writestarter(starter.file,paste0(main.dir,"/Scenarios/",input$Scenario_name),overwrite=TRUE)
-         RUN.SS(paste0(main.dir,"/Scenarios/",input$Scenario_name),ss.cmd="")
+         run_results <- try(RUN.SS(paste0(main.dir,"/Scenarios/",input$Scenario_name),ss.cmd=""))
          Model.output<-try(SS_output(paste0(main.dir,"/Scenarios/",input$Scenario_name),verbose=FALSE,printstats = FALSE))
           if(class(Model.output)=="try-error")
           {
@@ -5148,9 +5149,9 @@ SS_writeforecast(forecast.file,paste0("Scenarios/",input$Scenario_name),overwrit
           }
          show_modal_spinner(spin="flower",color=wes_palettes$Moonrise1[3],text="Making plots")
          RPs_4_plots<-as.numeric(trimws(unlist(strsplit(input$plot_RPs_inputs,","))))
-         SS_plots(Model.output,maxyr=data.file$endyr+1,verbose=FALSE,btarg=RPs_4_plots[1],minbthresh=RPs_4_plots[2])
+         plot_function <- callr::r_bg(SS_plots(Model.output,maxyr=data.file$endyr+1,verbose=FALSE,btarg=RPs_4_plots[1],minbthresh=RPs_4_plots[2]), supervise = TRUE)
          show_modal_spinner(spin="flower",color=wes_palettes$Moonrise1[4],text="Making tables")
-         try(SSexecutivesummary(Model.output))                 
+         table_results <- try(SSexecutivesummary(Model.output))            
     }   
     setwd(main.dir)
   }
@@ -5436,7 +5437,7 @@ if(length(grep("end_logit",rownames(Model.output$parameters)))>0)
 if(input$Opt_mod==TRUE)
 {
   show_modal_spinner(spin="flower",color=wes_palettes$Rushmore[1],text=paste0("Run initial optimization?"))
-  RUN.SS(file.path(modeff.dir,modeff.name),ss.cmd="-nox -mcmc 100 -hbf")
+  run_results <- try(RUN.SS(file.path(modeff.dir,modeff.name),ss.cmd="-nox -mcmc 100 -hbf"))
 
   remove_modal_spinner()
 }
@@ -6456,6 +6457,25 @@ show_modal_spinner(spin="flower",color=wes_palettes$Rushmore[1],text="Prepare mo
     #   ))
     })
 
+observeEvent(input$run_SS || input$run_SSS, {
+  if(is.null(input$no_plots_tables) && !is.null(input$no_tables)){
+    if(run_result == "ran model"){
+      showModal(modalDialog(paste0("You did it! Hooray! ", emo::ji("party_popper")), easyClose = TRUE))
+    }
+  }
+
+  if(!is.null(input$no_plots_tables) && is.null(input$no_tables)){
+    if(!is.null(table_results)){
+      showModal(modalDialog(paste0("You did it! Hooray! ", emo::ji("party_popper")), easyClose = TRUE))
+    }
+  }
+
+  if(!is.null(input$no_tables) && !is.null(input$no_plots_tables)){
+    if(fxn_result == "success"){
+      showModal(modalDialog(paste0("You did it! Hooray! ", emo::ji("party_popper")), easyClose = TRUE))
+    }
+  }
+})
   #})
 
 #observeEvent(req(input$run_Ensemble&exists("Ensemble.outputs()")),{
