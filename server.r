@@ -300,6 +300,7 @@ observeEvent(req(((as.numeric(input$tabs)*99)/99)<4), {
         shinyjs::show("Bookmark_panel")
         shinyjs::show("Data_panel")
         shinyjs::show("Existing_files")
+        shinyjs::show("write_different_directory")
         shinyjs::hide("panel_eqct")
         shinyjs::hide("panel_Ct_F_LO")
         shinyjs::hide("panel_data_wt_lt")
@@ -369,6 +370,7 @@ observeEvent(req(((as.numeric(input$tabs)*1)/1)<4&is.null(rv.Lt$data)&is.null(rv
         shinyjs::show("Bookmark_panel")
         shinyjs::show("Data_panel")
         shinyjs::show("Existing_files")
+        shinyjs::show("write_different_directory")
         shinyjs::hide("panel_eqct")
         shinyjs::hide("panel_Ct_F_LO")
         shinyjs::hide("panel_data_wt_lt")
@@ -434,6 +436,7 @@ observeEvent(req(!is.null(input$user_model)&input$user_model), {
         shinyjs::show("Bookmark_panel")
         shinyjs::show("Data_panel")
         shinyjs::show("Existing_files")
+        shinyjs::show("write_different_directory")
         shinyjs::hide("panel_eqct")
         shinyjs::hide("panel_Ct_F_LO")
         shinyjs::show("panel_data_wt_lt")
@@ -501,6 +504,7 @@ observeEvent(req(((as.numeric(input$tabs)*1)/1)<4&is.null(rv.Lt$data)&!is.null(r
         shinyjs::show("Bookmark_panel")
         shinyjs::show("Data_panel")
         shinyjs::hide("Existing_files")
+        shinyjs::show("write_different_directory")
         shinyjs::hide("panel_eqct")
         shinyjs::hide("panel_Ct_F_LO")
         shinyjs::hide("panel_data_wt_lt")
@@ -568,6 +572,7 @@ observeEvent(req(((as.numeric(input$tabs)*2)/2)<4&all(!is.null(c(rv.Lt$data,rv.A
         shinyjs::show("Bookmark_panel")
         shinyjs::show("Data_panel")
         shinyjs::hide("Existing_files")
+        shinyjs::show("write_different_directory")
         shinyjs::hide("panel_eqct")
         shinyjs::show("panel_Ct_F_LO")
         shinyjs::show("panel_data_wt_lt")
@@ -642,6 +647,7 @@ observeEvent(req(((as.numeric(input$tabs)*3)/3)<4&all(any(input$est_parms==FALSE
         shinyjs::show("Bookmark_panel")
         shinyjs::show("Data_panel")
         shinyjs::hide("Existing_files")
+        shinyjs::show("write_different_directory")
         shinyjs::show("panel_eqct")
         shinyjs::hide("panel_Ct_F_LO")
         if(any(!is.null(rv.Lt$data),!is.null(rv.Age$data))){shinyjs::show("panel_data_wt_lt")}
@@ -717,6 +723,7 @@ observeEvent(req(((as.numeric(input$tabs)*4)/4)<4&all(input$est_parms==TRUE,any(
         shinyjs::show("Bookmark_panel")
         shinyjs::show("Data_panel")
         shinyjs::hide("Existing_files")
+        shinyjs::show("write_different_directory")
         shinyjs::show("panel_eqct")
         shinyjs::hide("panel_Ct_F_LO")
         if(any(!is.null(rv.Lt$data),!is.null(rv.Age$data))){shinyjs::show("panel_data_wt_lt")}
@@ -1134,7 +1141,18 @@ observeEvent(req((as.numeric(input$tabs)*7/7)==7), {
 #############################
 ######### UI INPUTS #########
 #############################
+output$chosen_directory <- renderUI({ 
+    if(write_different_directory == TRUE){       
+      fluidRow(column(width=12,
+      id = "dir_choose",
+        label = "Choose new directory to write output."    
+    } 
+  }) 
 
+shinyDirChoose(input = input, session = session,
+    id = "dir_choose",
+    roots = getVolumes()() 
+  )
 # User activated pop-up parameter values ---------------
 #Model dimensions
 output$Model_dims1 <- renderUI({ 

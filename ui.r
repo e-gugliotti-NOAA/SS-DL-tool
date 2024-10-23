@@ -94,6 +94,14 @@ ui <- function(request) {
           h5(em("To do sensitivity runs for pre-existing models, make a copy of the folder and re-name it, then make desired changes in the data and/or control files.")),
         )),
         shinyjs::hidden(wellPanel(
+          id = "write_different_directory",
+          fluidRow(column(width = 10, checkboxInput("user_directory", h5(strong("Save output to a different directory than the app?")), FALSE))),
+          h5(em("Only use this option if you want to save output to a different directory that will then be pushed to a private repository on GitHub.")),
+          h5(em("That directory still must have a 'Scenarios' folder.")),
+          h5(em("We do not recommend this for most users.")),
+          uiOutput("chosen_directory")
+        )),
+        shinyjs::hidden(wellPanel(
           id = "panel_Ct_F_LO",
           h4(strong("Use constant catch or estimate fishing mortality directly?")),
           h5(em("Using constant catch assumes the same catch in all years in order to fit the length composition data (similar to LBSPR, but the model integrates the fit of each year, not each year separately)")),
