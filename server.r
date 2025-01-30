@@ -3256,7 +3256,6 @@ print(1)
       }
 
         ctl.file$size_selex_types[,1]<-c(rep(24,data.file$Nfleets-1),0)
-        ctl.file$age_selex_types[,1]<-10
         
       #Re-label so r4ss can interpret these new entries
       #rownames(ctl.file$init_F)<-paste0("InitF_seas_1_flt_",1:data.file$Nfleets,"Fishery",1:data.file$Nfleets)
@@ -4553,8 +4552,13 @@ if(input$Sel_choice=="Dome-shaped")
 			{
 				ctl.file$init_F<-rbind(ctl.file$init_F,ctl.file$init_F[1,])
 				ctl.file$size_selex_types<-rbind(ctl.file$size_selex_types,ctl.file$size_selex_types[1,])
-				  if(input$Ct_F_LO_select=="Estimate F" & is.null(rv.Ct$data)){ctl.file$size_selex_types[,2]<-3}
+        if(input$age_zero_selex){
+          ctl.file$age_selex_types[,1]<- 0
+          } else {
+            ctl.file$age_selex_types[,1]<- 10
+          }
         ctl.file$age_selex_types<-rbind(ctl.file$age_selex_types,ctl.file$age_selex_types[1,])
+				if(input$Ct_F_LO_select=="Estimate F" & is.null(rv.Ct$data)){ctl.file$size_selex_types[,2]<-3}
 				ctl.file$size_selex_parms<-rbind(ctl.file$size_selex_parms,ctl.file$size_selex_parms[1:6,])
         minmaxbin<-c(Selpeak[i+1]-min(data.file$lbin_vector),max(data.file$lbin_vector)-Selpeak[i+1])
 

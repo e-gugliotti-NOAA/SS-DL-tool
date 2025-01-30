@@ -702,7 +702,9 @@ ui <- function(request) {
           uiOutput("Sel_parms2"),
           uiOutput("Sel_parms3"),
           uiOutput("Sel_parms4"),
-          uiOutput("Sel_parms5")
+          uiOutput("Sel_parms5"),
+          br(),
+          fluidRow(column(width = 10, checkboxInput("age_zero_selex", "Use Selectivity = 1.0 for ages 0+", FALSE)))
 
           #    fluidRow(checkboxInput("Sex_lt_sel","Sex-specific selectivity?",FALSE)),
 
